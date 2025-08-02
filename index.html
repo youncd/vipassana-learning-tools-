@@ -1,1 +1,475 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위빠사나 수행 학습 도구 모음</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 50px 40px;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .intro h2 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .intro p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin: 50px 0;
+        }
+        
+        .tool-card {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-10px);
+            border-color: #667eea;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .tool-card.architecture {
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+        }
+        
+        .tool-card.learning {
+            background: linear-gradient(135deg, #ffd89b, #19547b);
+            color: white;
+        }
+        
+        .tool-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .tool-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .tool-description {
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+        
+        .tool-features {
+            text-align: left;
+            margin: 20px 0;
+        }
+        
+        .tool-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .tool-features li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .tool-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00b894;
+            font-weight: bold;
+        }
+        
+        .learning .tool-features li::before {
+            color: #feca57;
+        }
+        
+        .launch-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .launch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .status-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #95a5a6;
+        }
+        
+        .status-indicator.online {
+            background: #00b894;
+        }
+        
+        .status-indicator.offline {
+            background: #e74c3c;
+        }
+        
+        .about-section {
+            background: #f8f9fa;
+            padding: 40px;
+            margin-top: 40px;
+            border-radius: 15px;
+        }
+        
+        .about-section h3 {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .about-item {
+            text-align: center;
+        }
+        
+        .about-item h4 {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .about-item p {
+            line-height: 1.5;
+            color: #555;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        .github-link {
+            color: #74b9ff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .github-link:hover {
+            text-decoration: underline;
+        }
+        
+        .troubleshooting {
+            background: linear-gradient(135deg, #e17055, #fd79a8);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .troubleshooting h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .troubleshooting ul {
+            text-align: left;
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .troubleshooting li {
+            margin: 8px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tool-card {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>위빠사나 수행 학습 도구</h1>
+            <div class="subtitle">데요땀마 수따 - 완전한 깨달음의 길</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="intro">
+                <h2>불교 수행의 핵심을 체계적으로 학습하세요</h2>
+                <p>
+                    사념처 수행과 위빠사나 지혜계발을 위한 종합 학습도구입니다. 
+                    12연기법, 육입-육경-육식 시스템, 나마루빠 분별지 등 
+                    부처님의 가르침을 현대적이고 이해하기 쉬운 방식으로 제공합니다.
+                </p>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card architecture" onclick="openTool('architecture')">
+                    <div class="status-indicator" id="arch-status"></div>
+                    <div class="tool-icon">🏗️</div>
+                    <div class="tool-title">아키텍처 도표</div>
+                    <div class="tool-description">
+                        위빠사나 수행의 전체 과정을 20단계 레이어로 시각화한 종합 아키텍처
+                    </div>
+                    <div class="tool-features">
+                        <ul>
+                            <li>생로사부터 니바나까지 완전한 수행 경로</li>
+                            <li>4,800px 대형 스케일 상세 정보</li>
+                            <li>한글-빨리어 대조 용어집</li>
+                            <li>단계별 상호연결 시각화</li>
+                            <li>구체적 수행법과 실제 경험담</li>
+                        </ul>
+                    </div>
+                    <button class="launch-btn" onclick="openTool('architecture')">아키텍처 보기</button>
+                </div>
+                
+                <div class="tool-card learning" onclick="openTool('learning')">
+                    <div class="status-indicator" id="learning-status"></div>
+                    <div class="tool-icon">🎮</div>
+                    <div class="tool-title">인터랙티브 학습도구</div>
+                    <div class="tool-description">
+                        플래시카드와 퀴즈로 재미있게 배우는 불교 수행 교육 게임
+                    </div>
+                    <div class="tool-features">
+                        <ul>
+                            <li>15단계 단계별 학습 슬라이드</li>
+                            <li>플래시카드 뒤집기 상호작용</li>
+                            <li>학습 진도 관리 시스템</li>
+                            <li>퀴즈를 통한 이해도 확인</li>
+                            <li>호흡 수행 애니메이션 가이드</li>
+                        </ul>
+                    </div>
+                    <button class="launch-btn" onclick="openTool('learning')">학습 시작하기</button>
+                </div>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>🔧 링크가 작동하지 않는 경우</h4>
+                <p>아래 내용을 확인해주세요:</p>
+                <ul>
+                    <li><strong>파일명 확인:</strong> GitHub 저장소에 <code>architecture.html</code>과 <code>learning-tool.html</code> 파일이 업로드되었는지 확인</li>
+                    <li><strong>GitHub Pages 활성화:</strong> Settings → Pages에서 배포가 활성화되었는지 확인</li>
+                    <li><strong>배포 완료 대기:</strong> 파일 업로드 후 5-10분 정도 기다린 후 재접속</li>
+                    <li><strong>브라우저 캐시 삭제:</strong> Ctrl+F5 (또는 Cmd+Shift+R)로 강제 새로고침</li>
+                </ul>
+            </div>
+            
+            <div class="about-section">
+                <h3>학습 도구의 특징</h3>
+                <div class="about-content">
+                    <div class="about-item">
+                        <h4>체계적 구성</h4>
+                        <p>
+                            원문의 깊이 있는 내용을 현대적 교육 방법론에 맞춰 
+                            체계적으로 재구성하여 단계적 학습이 가능합니다.
+                        </p>
+                    </div>
+                    <div class="about-item">
+                        <h4>실용적 접근</h4>
+                        <p>
+                            이론뿐만 아니라 실제 수행에 바로 적용할 수 있는 
+                            구체적인 방법과 가이드를 제공합니다.
+                        </p>
+                    </div>
+                    <div class="about-item">
+                        <h4>현대적 도구</h4>
+                        <p>
+                            인터랙티브한 웹 기술을 활용하여 전통적인 
+                            불교 가르침을 현대인이 이해하기 쉽게 전달합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>
+                🙏 모든 중생이 고통에서 벗어나 진정한 행복을 얻기를 기원합니다 🙏<br>
+                <a href="https://github.com/youncd/vipassana-learning-tools" class="github-link">
+                    GitHub에서 소스코드 보기
+                </a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function openTool(toolType) {
+            // 가능한 파일명들을 순서대로 시도
+            let possibleFiles = [];
+            
+            if (toolType === 'architecture') {
+                possibleFiles = [
+                    'architecture.html',
+                    'comprehensive_buddhist_architecture.html',
+                    'buddhist_architecture_diagram.html',
+                    'architecture-diagram.html',
+                    'vipassana-architecture.html'
+                ];
+            } else if (toolType === 'learning') {
+                possibleFiles = [
+                    'learning-tool.html',
+                    'buddhist_education_flash.html',
+                    'learning-game.html',
+                    'flash-cards.html',
+                    'vipassana-learning.html'
+                ];
+            }
+            
+            // 첫 번째 파일명으로 시도
+            tryOpenFile(possibleFiles, 0);
+        }
+        
+        function tryOpenFile(fileList, index) {
+            if (index >= fileList.length) {
+                // 모든 파일명 시도 실패
+                showErrorMessage(fileList[0]);
+                return;
+            }
+            
+            const fileName = fileList[index];
+            
+            // 파일 존재 여부 확인
+            fetch(fileName, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        // 파일이 존재하면 새 탭에서 열기
+                        window.open(fileName, '_blank');
+                    } else {
+                        // 다음 파일명 시도
+                        tryOpenFile(fileList, index + 1);
+                    }
+                })
+                .catch(() => {
+                    // 다음 파일명 시도
+                    tryOpenFile(fileList, index + 1);
+                });
+        }
+        
+        function showErrorMessage(fileName) {
+            const message = `⚠️ 페이지를 찾을 수 없습니다!\n\n다음을 확인해주세요:\n\n1. GitHub 저장소에 "${fileName}" 파일이 업로드되었는지 확인\n2. 파일명이 정확한지 확인 (대소문자 구분)\n3. GitHub Pages가 활성화되었는지 확인\n4. 배포 완료까지 5-10분 대기\n\n문제가 계속되면 브라우저 캐시를 삭제하고 다시 시도해주세요.`;
+            alert(message);
+        }
+        
+        // 페이지 로드 시 파일 존재 여부 확인하여 상태 표시
+        window.addEventListener('load', function() {
+            checkFileStatus('architecture.html', 'arch-status');
+            checkFileStatus('learning-tool.html', 'learning-status');
+        });
+        
+        function checkFileStatus(fileName, statusId) {
+            const statusElement = document.getElementById(statusId);
+            
+            fetch(fileName, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        // 파일이 존재하면 초록색 표시
+                        statusElement.classList.add('online');
+                        statusElement.title = '파일이 정상적으로 업로드되었습니다';
+                    } else {
+                        // 파일이 없으면 빨간색 표시
+                        statusElement.classList.add('offline');
+                        statusElement.title = `파일을 찾을 수 없습니다: ${fileName}`;
+                    }
+                })
+                .catch(() => {
+                    // 오류 시 빨간색 표시
+                    statusElement.classList.add('offline');
+                    statusElement.title = `파일 확인 중 오류가 발생했습니다: ${fileName}`;
+                });
+        }
+    </script>
+</body>
+</html>
