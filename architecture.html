@@ -1,1 +1,1062 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위빠사나 수행 종합 아키텍처 - 상세판</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .architecture-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .title {
+            text-align: center;
+            font-size: 2.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .architecture-diagram {
+            position: relative;
+            width: 70%;
+            height: 4800px;
+            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border: 3px solid #e0e6ed;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .layer {
+            position: absolute;
+            width: 90%;
+            left: 5%;
+            border-radius: 12px;
+            padding: 20px;
+            font-weight: 600;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            overflow-y: auto;
+        }
+        
+        .layer:hover {
+            transform: scale(1.01);
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        /* 최상층 - 궁극목표 */
+        .layer-nirvana {
+            top: 20px;
+            height: 120px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border-color: #c44569;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        /* 4단계 깨달음 */
+        .layer-four-stages {
+            top: 160px;
+            height: 180px;
+            background: linear-gradient(135deg, #feca57, #ff9ff3);
+            color: #2c3e50;
+            border-color: #ff6348;
+        }
+        
+        /* 심리적 변화와 성장 */
+        .layer-psychological {
+            top: 360px;
+            height: 160px;
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            color: white;
+            border-color: #e84393;
+        }
+        
+        /* 아상 소멸 과정 */
+        .layer-ego-dissolution {
+            top: 540px;
+            height: 200px;
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+            color: #2c3e50;
+            border-color: #7bed9f;
+        }
+        
+        /* 삼청정 */
+        .layer-three-purifications {
+            top: 760px;
+            height: 180px;
+            background: linear-gradient(135deg, #70a1ff, #5352ed);
+            color: white;
+            border-color: #2f3542;
+        }
+        
+        /* 견해청정 - 나마루빠 분별지 */
+        .layer-nama-rupa {
+            top: 960px;
+            height: 220px;
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            color: #2c3e50;
+            border-color: #d63031;
+        }
+        
+        /* 개념 초월 3단계 */
+        .layer-concept-transcendence {
+            top: 1200px;
+            height: 240px;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            border-color: #5f3dc4;
+        }
+        
+        /* 궁극적 실재 관찰 */
+        .layer-ultimate-reality {
+            top: 1460px;
+            height: 200px;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            color: #2c3e50;
+            border-color: #fd79a8;
+        }
+        
+        /* 지수화풍 해체 */
+        .layer-elements {
+            top: 1680px;
+            height: 180px;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            color: #2c3e50;
+            border-color: #e17055;
+        }
+        
+        /* 구체적 수행방법 */
+        .layer-specific-practice {
+            top: 1880px;
+            height: 280px;
+            background: linear-gradient(135deg, #81ecec, #74b9ff);
+            color: #2c3e50;
+            border-color: #0984e3;
+        }
+        
+        /* 사념처 수행 */
+        .layer-four-foundations {
+            top: 2180px;
+            height: 220px;
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            color: #2c3e50;
+            border-color: #e84393;
+        }
+        
+        /* 8정도 */
+        .layer-eightfold-path {
+            top: 2420px;
+            height: 200px;
+            background: linear-gradient(135deg, #55a3ff, #003d82);
+            color: white;
+            border-color: #0984e3;
+        }
+        
+        /* 갈애의 생성과정 */
+        .layer-craving-process {
+            top: 2640px;
+            height: 240px;
+            background: linear-gradient(135deg, #ff7675, #d63031);
+            color: white;
+            border-color: #e17055;
+        }
+        
+        /* 36차까수따 */
+        .layer-36-cravings {
+            top: 2900px;
+            height: 200px;
+            background: linear-gradient(135deg, #e17055, #2d3436);
+            color: white;
+            border-color: #636e72;
+        }
+        
+        /* 육촉과 육수 */
+        .layer-contact-feeling {
+            top: 3120px;
+            height: 180px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            border-color: #5f3dc4;
+        }
+        
+        /* 육입-육경-육식 상세 */
+        .layer-six-detailed {
+            top: 3320px;
+            height: 280px;
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            border-color: #00cec9;
+        }
+        
+        /* 12연기 상세 */
+        .layer-twelve-links {
+            top: 3620px;
+            height: 300px;
+            background: linear-gradient(135deg, #fdcb6e, #fd79a8);
+            color: #2c3e50;
+            border-color: #e84393;
+        }
+        
+        /* 업과 과보 */
+        .layer-karma {
+            top: 3940px;
+            height: 200px;
+            background: linear-gradient(135deg, #fab1a0, #e17055);
+            color: #2c3e50;
+            border-color: #d63031;
+        }
+        
+        /* 사악처와 선처 */
+        .layer-realms {
+            top: 4160px;
+            height: 220px;
+            background: linear-gradient(135deg, #636e72, #2d3436);
+            color: white;
+            border-color: #2d3436;
+        }
+        
+        /* 생로사와 부처님 출현 */
+        .layer-birth-death {
+            top: 4400px;
+            height: 180px;
+            background: linear-gradient(135deg, #2d3436, #636e72);
+            color: white;
+            border-color: #2d3436;
+        }
+        
+        /* 우빠띠 삼빠띠 */
+        .layer-conditions {
+            top: 4600px;
+            height: 160px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-color: #74b9ff;
+        }
+        
+        /* 사이드 패널 */
+        .side-panel {
+            width: 28%;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #e0e6ed;
+            height: 4800px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+        }
+        
+        .side-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .term-box {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #e17055;
+        }
+        
+        .term-korean {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .term-pali {
+            font-style: italic;
+            color: #d63031;
+            font-size: 0.95em;
+            margin: 5px 0;
+        }
+        
+        .term-meaning {
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .quote-box {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-style: italic;
+            border-left: 4px solid #fff;
+        }
+        
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .detail-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.3;
+        }
+        
+        .practice-steps {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .practice-steps ol {
+            margin-left: 20px;
+        }
+        
+        .practice-steps li {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+        
+        /* 연결선과 화살표 */
+        .connection-line {
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        
+        .arrow {
+            position: absolute;
+            font-size: 2em;
+            color: #667eea;
+            font-weight: bold;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .architecture-diagram {
+                width: 100%;
+            }
+            
+            .side-panel {
+                width: 100%;
+                height: auto;
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .architecture-container {
+                padding: 20px;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .layer {
+                font-size: 0.9em;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="architecture-container">
+        <h1 class="title">위빠사나 수행 종합 아키텍처</h1>
+        <div class="subtitle">데요땀마 수따 - 완전한 깨달음의 길</div>
+        
+        <div class="main-content">
+            <div class="architecture-diagram">
+                <!-- 연결선들 -->
+                <div class="connection-line" style="top: 140px; height: 20px;"></div>
+                <div class="connection-line" style="top: 340px; height: 20px;"></div>
+                <div class="connection-line" style="top: 520px; height: 20px;"></div>
+                <div class="connection-line" style="top: 740px; height: 20px;"></div>
+                <div class="connection-line" style="top: 940px; height: 20px;"></div>
+                <div class="connection-line" style="top: 1180px; height: 20px;"></div>
+                <div class="connection-line" style="top: 1440px; height: 20px;"></div>
+                <div class="connection-line" style="top: 1660px; height: 20px;"></div>
+                <div class="connection-line" style="top: 1860px; height: 20px;"></div>
+                <div class="connection-line" style="top: 2160px; height: 20px;"></div>
+                <div class="connection-line" style="top: 2400px; height: 20px;"></div>
+                <div class="connection-line" style="top: 2620px; height: 20px;"></div>
+                <div class="connection-line" style="top: 2880px; height: 20px;"></div>
+                <div class="connection-line" style="top: 3100px; height: 20px;"></div>
+                <div class="connection-line" style="top: 3300px; height: 20px;"></div>
+                <div class="connection-line" style="top: 3600px; height: 20px;"></div>
+                <div class="connection-line" style="top: 3920px; height: 20px;"></div>
+                <div class="connection-line" style="top: 4140px; height: 20px;"></div>
+                <div class="connection-line" style="top: 4380px; height: 20px;"></div>
+                <div class="connection-line" style="top: 4580px; height: 20px;"></div>
+                
+                <!-- 화살표들 -->
+                <div class="arrow" style="top: 145px;">↓</div>
+                <div class="arrow" style="top: 345px;">↓</div>
+                <div class="arrow" style="top: 525px;">↓</div>
+                <div class="arrow" style="top: 745px;">↓</div>
+                <div class="arrow" style="top: 945px;">↓</div>
+                <div class="arrow" style="top: 1185px;">↓</div>
+                <div class="arrow" style="top: 1445px;">↓</div>
+                <div class="arrow" style="top: 1665px;">↓</div>
+                <div class="arrow" style="top: 1865px;">↓</div>
+                <div class="arrow" style="top: 2165px;">↓</div>
+                <div class="arrow" style="top: 2405px;">↓</div>
+                <div class="arrow" style="top: 2625px;">↓</div>
+                <div class="arrow" style="top: 2885px;">↓</div>
+                <div class="arrow" style="top: 3105px;">↓</div>
+                <div class="arrow" style="top: 3305px;">↓</div>
+                <div class="arrow" style="top: 3605px;">↓</div>
+                <div class="arrow" style="top: 3925px;">↓</div>
+                <div class="arrow" style="top: 4145px;">↓</div>
+                <div class="arrow" style="top: 4385px;">↓</div>
+                <div class="arrow" style="top: 4585px;">↓</div>
+                
+                <!-- 최종 목표: 니바나 -->
+                <div class="layer layer-nirvana">
+                    <strong>니바나 (Nibbāna)</strong><br>
+                    완전한 해탈, 윤회에서의 영원한 자유<br>
+                    모든 고통의 완전한 소멸
+                </div>
+                
+                <!-- 4단계 깨달음 -->
+                <div class="layer layer-four-stages">
+                    <strong>4단계 성인의 길</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>수다원 (Sotāpanna)</strong><br>
+                            예류과, 사견 완전히 제거<br>
+                            최대 7번 윤회 후 해탈
+                        </div>
+                        <div class="detail-item">
+                            <strong>사다함 (Sakadāgāmī)</strong><br>
+                            일래과, 탐진이 크게 약화<br>
+                            한 번 더 인간계에 태어남
+                        </div>
+                        <div class="detail-item">
+                            <strong>아나함 (Anāgāmī)</strong><br>
+                            불환과, 욕계 탐진 완전 제거<br>
+                            색계나 무색계에서 열반
+                        </div>
+                        <div class="detail-item">
+                            <strong>아라한 (Arahant)</strong><br>
+                            응공, 모든 번뇌 완전 소멸<br>
+                            현생에서 완전한 해탈
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 심리적 변화와 인간 성장 -->
+                <div class="layer layer-psychological">
+                    <strong>지혜계발로 인한 심리변화</strong><br>
+                    <div class="practice-steps">
+                        • 이기심 완전히 사라짐 → 이타심 자연스럽게 증장<br>
+                        • 자만심, 욕심, 악행의 뿌리인 아상이 소멸<br>
+                        • 마음이 홀가분해지고 모든 괴로움에서 해방<br>
+                        • 인간으로서의 품격과 수준이 향상<br>
+                        • 성인(聖人)의 경지로 성장
+                    </div>
+                </div>
+                
+                <!-- 아상 소멸 과정 -->
+                <div class="layer layer-ego-dissolution">
+                    <strong>아상 소멸과 사까야 디띨 제거</strong><br>
+                    <div class="practice-steps">
+                        <strong>사까야 디띨 (Sakkāya-diṭṭhi) - 유신견:</strong><br>
+                        • 물질+정신을 '나'로 착각하는 견해<br>
+                        • 걷는 나, 숨쉬는 나, 앉는 나가 실제로는 존재하지 않음<br>
+                        • 복합적 조건들의 집합을 '나'로 착각<br>
+                        • 자동차 비유: 부품들의 집합체일 뿐 '자동차'는 없음<br>
+                        <br><strong>아상이 깨지는 순간:</strong><br>
+                        • 아상·인상·중생상·수자상 모두 소멸<br>
+                        • 남자도 여자도 너도 나도 원래 없었음을 깨달음
+                    </div>
+                </div>
+                
+                <!-- 삼청정 -->
+                <div class="layer layer-three-purifications">
+                    <strong>삼청정 (三淸淨) - 세 가지 청정함</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>실라 위수디</strong><br>
+                            계청정 (Sīla-visuddhi)<br>
+                            계율의 완전한 청정
+                        </div>
+                        <div class="detail-item">
+                            <strong>찌따 위수디</strong><br>
+                            심청정 (Citta-visuddhi)<br>
+                            마음의 완전한 청정<br>
+                            집중력 완성
+                        </div>
+                        <div class="detail-item">
+                            <strong>디띨 위수디</strong><br>
+                            견청정 (Diṭṭhi-visuddhi)<br>
+                            견해의 완전한 청정<br>
+                            사견의 완전 제거
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 나마루빠 분별지 -->
+                <div class="layer layer-nama-rupa">
+                    <strong>나마루빠 빠리체다 냐나</strong><br>
+                    <em>Nāma-rūpa-pariccheda-ñāṇa</em><br>
+                    <div class="practice-steps">
+                        <strong>첫 번째 위빠사나 지혜:</strong><br>
+                        • 물질은 물질, 정신은 정신 - 완전히 별개<br>
+                        • 기름과 물, 물과 불처럼 전혀 섞이지 않음<br>
+                        • 정신: 인지기능 있음 (살아있는 사람)<br>
+                        • 물질: 인지기능 없음 (시체, 나무토막)<br>
+                        <br><strong>매 순간 관찰:</strong><br>
+                        • 들숨(물질) ↔ 들이쉬는 마음(정신)<br>
+                        • 날숨(물질) ↔ 내쉬는 마음(정신)<br>
+                        • 1초에 1번씩, 1시간에 3600번 관찰
+                    </div>
+                </div>
+                
+                <!-- 개념 초월 3단계 -->
+                <div class="layer layer-concept-transcendence">
+                    <strong>개념 초월의 3단계</strong><br>
+                    <div class="practice-steps">
+                        <strong>1. 나마 빤냐띨 (Nāma-paññatti)</strong><br>
+                        이름 개념 초월: 단어, 명칭을 넘어서기<br>
+                        '오른발 걷다', '들숨 날숨' 등의 언어적 개념<br>
+                        <br><strong>2. 산타나 빤냐띨 (Santāna-paññatti)</strong><br>
+                        모양 개념 초월: 형태, 모습을 넘어서기<br>
+                        다리모양, 배모양, 걸음모양 등의 시각적 개념<br>
+                        <br><strong>3. 사무하 빤냐띨 (Samuha-paññatti)</strong><br>
+                        집합 개념 초월: 복합체를 해체하여 보기<br>
+                        섞여있는 지수화풍과 마음상태들을 각각 분리
+                    </div>
+                </div>
+                
+                <!-- 궁극적 실재 관찰 -->
+                <div class="layer layer-ultimate-reality">
+                    <strong>빠라마타 (Paramattha) - 궁극적 실재</strong><br>
+                    <div class="practice-steps">
+                        <strong>개념을 넘어선 진실:</strong><br>
+                        • 모든 개념이 깨어진 후 보이는 실제<br>
+                        • 1/4초, 1/8초, 1/16초 단위로 관찰<br>
+                        • 깐나(시간) 덩어리가 완전히 해체됨<br>
+                        • 위빠사나 지혜 = 특별한 봄, 인사이트<br>
+                        <br><strong>에히 빠시고 (Ehi passiko):</strong><br>
+                        "와서 보라" - 직접 체험 가능한 가르침
+                    </div>
+                </div>
+                
+                <!-- 지수화풍 해체 관찰 -->
+                <div class="layer layer-elements">
+                    <strong>지수화풍 (地水火風) 해체 관찰</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>지대 (地)</strong><br>
+                            딱딱함, 부드러움<br>
+                            무거움, 가벼움<br>
+                            지탱하는 힘
+                        </div>
+                        <div class="detail-item">
+                            <strong>수대 (水)</strong><br>
+                            응집력, 점착성<br>
+                            흘러가는 성질<br>
+                            결합시키는 힘
+                        </div>
+                        <div class="detail-item">
+                            <strong>화대 (火)</strong><br>
+                            온도, 열기<br>
+                            차가움, 따뜻함<br>
+                            성숙시키는 힘
+                        </div>
+                        <div class="detail-item">
+                            <strong>풍대 (風)</strong><br>
+                            밀어내고 당기는 힘<br>
+                            펌핑, 누르는 힘<br>
+                            움직이게 하는 힘
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 구체적 수행방법 -->
+                <div class="layer layer-specific-practice">
+                    <strong>구체적인 수행 실천법</strong><br>
+                    <div class="practice-steps">
+                        <strong>앉기 수행:</strong><br>
+                        • 앉아있는 몸 (물질적 실재) + 앉으려는 마음 (정신적 실재)<br>
+                        • 엉덩이와 의자가 닿는 팽팽한 힘<br>
+                        • 자세를 지키는 뻣뻣한 힘들<br>
+                        • 매순간 물질과 정신을 분리해서 관찰<br>
+                        <br><strong>걷기 수행:</strong><br>
+                        • 오른발 걷다 → 걷고자 하는 마음 + 걷는 물질<br>
+                        • 다리가 들리고 앞으로 나가서 내려가는 과정<br>
+                        • 물질적 과정과 정신적 과정의 상호작용<br>
+                        <br><strong>호흡 수행:</strong><br>
+                        • 들숨 (풍대) + 들이쉴려는 마음<br>
+                        • 날숨 (풍대) + 내쉴려는 마음<br>
+                        • 매순간 이 두 가지만 굴러가고 있음을 관찰
+                    </div>
+                </div>
+                
+                <!-- 사념처 수행 -->
+                <div class="layer layer-four-foundations">
+                    <strong>사념처 (Satipaṭṭhāna) 수행</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>신념처</strong><br>
+                            Kāyānupassanā<br>
+                            몸에 대한 마음챙김<br>
+                            들숨날숨, 자세 관찰
+                        </div>
+                        <div class="detail-item">
+                            <strong>수념처</strong><br>
+                            Vedanānupassanā<br>
+                            느낌에 대한 마음챙김<br>
+                            좋음, 나쁨, 덤덤함
+                        </div>
+                        <div class="detail-item">
+                            <strong>심념처</strong><br>
+                            Cittānupassanā<br>
+                            마음에 대한 마음챙김<br>
+                            찌따 위빠사나
+                        </div>
+                        <div class="detail-item">
+                            <strong>법념처</strong><br>
+                            Dhammānupassanā<br>
+                            법에 대한 마음챙김<br>
+                            신수심법 관찰
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 8정도 -->
+                <div class="layer layer-eightfold-path">
+                    <strong>8정도 (Aṭṭhaṅgika-magga)</strong><br>
+                    <div class="practice-steps">
+                        <strong>지혜 (Paññā):</strong> 정견, 정사유<br>
+                        <strong>계 (Sīla):</strong> 정어, 정업, 정명<br>
+                        <strong>정 (Samādhi):</strong> 정정진, 정념, 정정<br>
+                        <br>사념처 수행과 8정도를 실천하면 지혜계발이 되고<br>
+                        심리변화가 일어나며 인간으로서 성장한다
+                    </div>
+                </div>
+                
+                <!-- 갈애 생성 과정 -->
+                <div class="layer layer-craving-process">
+                    <strong>갈애(渴愛) 생성 과정</strong><br>
+                    <div class="practice-steps">
+                        <strong>좋은 느낌 → 탐심 (탐):</strong><br>
+                        욕심나게 되어 더 많이 갖고 싶어함<br>
+                        갑자기 죽으면 귀신으로 태어남<br>
+                        <br><strong>나쁜 느낌 → 성냄 (진):</strong><br>
+                        싫어하며 그 상황에서 벗어나고 싶어함<br>
+                        갑자기 죽으면 지옥에 태어남<br>
+                        <br><strong>덤덤한 느낌 → 어리석음 (치):</strong><br>
+                        멍때리고 무명상태<br>
+                        갑자기 죽으면 축생으로 태어남
+                    </div>
+                </div>
+                
+                <!-- 36차까수따 -->
+                <div class="layer layer-36-cravings">
+                    <strong>36 차까 수따 (Cha-chakka Sutta)</strong><br>
+                    <div class="practice-steps">
+                        <strong>6×6=36 갈애:</strong><br>
+                        • 보면서 갈애 (안식 + 색경)<br>
+                        • 들으면서 갈애 (이식 + 성경)<br>
+                        • 냄새맡으면서 갈애 (비식 + 향경)<br>
+                        • 맛보면서 갈애 (설식 + 미경)<br>
+                        • 감촉하면서 갈애 (신식 + 촉경)<br>
+                        • 생각하면서 갈애 (의식 + 법경)<br>
+                        <br>이것은 과보로서 피할 수 없는 자연스러운 현상
+                    </div>
+                </div>
+                
+                <!-- 육촉과 육수 -->
+                <div class="layer layer-contact-feeling">
+                    <strong>육촉(六觸)과 육수(六受)</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>육촉 (Ṣaḍ-sparśa)</strong><br>
+                            감각기관+대상+의식이<br>
+                            만나는 접촉 순간<br>
+                            안촉, 이촉, 비촉, 설촉, 신촉, 의촉
+                        </div>
+                        <div class="detail-item">
+                            <strong>육수 (Ṣaḍ-vedanā)</strong><br>
+                            접촉에서 생기는<br>
+                            여섯 가지 느낌<br>
+                            좋은 느낌, 안 좋은 느낌, 덤덤한 느낌
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 육입-육경-육식 상세 -->
+                <div class="layer layer-six-detailed">
+                    <strong>육입-육경-육식 시스템 상세</strong><br>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                            <strong>육입 (六入)</strong><br>
+                            <em>Ṣaḍ-āyatana</em><br><br>
+                            1. 안(眼) - 눈<br>
+                            2. 이(耳) - 귀<br>
+                            3. 비(鼻) - 코<br>
+                            4. 설(舌) - 혀<br>
+                            5. 신(身) - 몸<br>
+                            6. 의(意) - 마음
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                            <strong>육경 (六境)</strong><br>
+                            <em>Ṣaḍ-viṣaya</em><br><br>
+                            1. 색(色) - 형상<br>
+                            2. 성(聲) - 소리<br>
+                            3. 향(香) - 냄새<br>
+                            4. 미(味) - 맛<br>
+                            5. 촉(觸) - 감촉<br>
+                            6. 법(法) - 법경
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                            <strong>육식 (六識)</strong><br>
+                            <em>Ṣaḍ-vijñāna</em><br><br>
+                            1. 안식 - 보는 의식<br>
+                            2. 이식 - 듣는 의식<br>
+                            3. 비식 - 냄새 의식<br>
+                            4. 설식 - 맛 의식<br>
+                            5. 신식 - 감촉 의식<br>
+                            6. 의식 - 생각 의식
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 12연기 상세 -->
+                <div class="layer layer-twelve-links">
+                    <strong>십이연기법 (Dvādaśa-nidāna) 상세</strong><br>
+                    <div class="practice-steps">
+                        <strong>무명(無明) → 행(行) → 식(識) → 명색(名色) → 육입(六入) → 촉(觸) → 수(受) → 애(愛) → 취(取) → 유(有) → 생(生) → 노사(老死)</strong><br>
+                        <br><em>Avidyā → Saṃskāra → Vijñāna → Nāma-rūpa → Ṣaḍ-āyatana → Sparśa → Vedanā → Tṛṣṇā → Upādāna → Bhava → Jāti → Jarā-maraṇa</em><br>
+                        <br><strong>우리의 존재:</strong><br>
+                        식으로 태어나고 → 명색으로 물질정신이 있고 → 육입으로 여섯 감각기관이 있고 → 색성향미촉법과 마주치게 되고 → 안이비설신의라는 보고 듣고 냄새맡고 맛보고 감촉하고 생각하는 마음이 벌어진다
+                    </div>
+                </div>
+                
+                <!-- 업과 과보 -->
+                <div class="layer layer-karma">
+                    <strong>업(業)과 과보(果報)</strong><br>
+                    <div class="practice-steps">
+                        <strong>과보:</strong> 우리가 했던 업으로 받게 되는 것<br>
+                        태어났기 때문에 육입이 있고, 육경이 있고, 촉하고, 느끼고,<br>
+                        안이비설신의 마음 따라 행복하고 괴롭고 덤덤하다<br>
+                        <br><strong>자연스러운 반응:</strong><br>
+                        좋으면 욕심나고, 나쁘면 싫어하고, 덤덤하면 어리석게 반응<br>
+                        이것이 불선업으로 이어져 사악처에 갈 수 있다
+                    </div>
+                </div>
+                
+                <!-- 사악처와 선처 -->
+                <div class="layer layer-realms">
+                    <strong>사악처와 선처</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>사악처 (四惡處)</strong><br>
+                            지옥(화내며 죽으면)<br>
+                            귀신(욕심으로 죽으면)<br>
+                            축생(멍때리며 죽으면)<br>
+                            아수라
+                        </div>
+                        <div class="detail-item">
+                            <strong>선처</strong><br>
+                            인간 (人間)<br>
+                            천신 (天神)<br>
+                            범천 (梵天)<br>
+                            계속 수행할 기회
+                        </div>
+                    </div>
+                    <br><strong>목표:</strong> 사악처를 피하고 선업을 통해 계속 수행할 수 있는 기회를 얻어<br>
+                    위빠사나로 직접적으로 윤회에서 벗어나기
+                </div>
+                
+                <!-- 생로사와 부처님 출현 -->
+                <div class="layer layer-birth-death">
+                    <strong>생로사와 부처님 출현</strong><br>
+                    <div class="practice-steps">
+                        "이 세상에 생로사가 벌어지지 않으면 부처님께서 출현하지 않으실 것이고<br>
+                        담마 위니야라는 경율론도 세상에 밝혀지지 않을 것이다"<br>
+                        <br>모든 중생이 태어나고 늙어가고 죽어가는 고통에서 벗어나게 해드리려고<br>
+                        부처님께서 출현하셨다. 태양의 은혜와 같이 부처님의 은혜를<br>
+                        믿든 안 믿든 모두가 받고 있다.
+                    </div>
+                </div>
+                
+                <!-- 수행 조건 -->
+                <div class="layer layer-conditions">
+                    <strong>수행을 위한 조건들</strong><br>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <strong>깔라 삼빠띠</strong><br>
+                            좋은 시대<br>
+                            부처님 가르침이<br>
+                            전해지는 시대
+                        </div>
+                        <div class="detail-item">
+                            <strong>수빠띠</strong><br>
+                            인간으로 태어남<br>
+                            수행할 수 있는<br>
+                            귀중한 기회
+                        </div>
+                        <div class="detail-item">
+                            <strong>우빠띠 삼빠띠</strong><br>
+                            감각기관 완전<br>
+                            눈귀코혀몸마음<br>
+                            모든 기능 정상
+                        </div>
+                        <div class="detail-item">
+                            <strong>빠요가 삼빠띠</strong><br>
+                            지혜와 사띠로<br>
+                            매순간 놓침없이<br>
+                            수행할 능력
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 사이드 정보 패널 -->
+            <div class="side-panel">
+                <h3>핵심 빨리어 용어집</h3>
+                
+                <div class="term-box">
+                    <div class="term-korean">위빠사나</div>
+                    <div class="term-pali">Vipassanā</div>
+                    <div class="term-meaning">통찰지혜, 있는 그대로 봄. 개념을 넘어서 궁극적 실재를 꿰뚫어 보는 특별한 지혜</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">사념처</div>
+                    <div class="term-pali">Satipaṭṭhāna</div>
+                    <div class="term-meaning">네 가지 마음챙김 수행. 신념처, 수념처, 심념처, 법념처</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">나마루빠</div>
+                    <div class="term-pali">Nāma-rūpa</div>
+                    <div class="term-meaning">정신과 물질. 명색. 모든 존재는 이 둘로만 구성됨</div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <div class="quote-box">
+                    "물질은 물질이구나 정신은 정신이구나<br>
+                    물질은 정신이 아니고 정신은 물질이 아니구나"<br>
+                    - 첫 번째 지혜계발
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">사까야 디띨</div>
+                    <div class="term-pali">Sakkāya-diṭṭhi</div>
+                    <div class="term-meaning">유신견. 몸을 가진 존재라는 견해. 물질+정신을 '나'로 보는 착각</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">빠라마타</div>
+                    <div class="term-pali">Paramattha</div>
+                    <div class="term-meaning">궁극적 실재. 개념을 넘어선 진실한 존재</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">빤냐띨</div>
+                    <div class="term-pali">Paññatti</div>
+                    <div class="term-meaning">개념, 명명법. 이름·모양·집합의 세 종류</div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <h3>12연기 빨리어</h3>
+                
+                <div class="term-box">
+                    <div class="term-korean">십이연기</div>
+                    <div class="term-pali">Dvādaśa-nidāna</div>
+                    <div class="term-meaning">무명→행→식→명색→육입→촉→수→애→취→유→생→노사</div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <h3>감각 시스템</h3>
+                
+                <div class="term-box">
+                    <div class="term-korean">육입</div>
+                    <div class="term-pali">Ṣaḍ-āyatana</div>
+                    <div class="term-meaning">여섯 감각 기관. 안이비설신의</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">육경</div>
+                    <div class="term-pali">Ṣaḍ-viṣaya</div>
+                    <div class="term-meaning">여섯 대상. 색성향미촉법</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">육식</div>
+                    <div class="term-pali">Ṣaḍ-vijñāna</div>
+                    <div class="term-meaning">여섯 의식. 보고듣고냄새맡고맛보고감촉하고생각하는 의식</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">차까 수따</div>
+                    <div class="term-pali">Cha-chakka Sutta</div>
+                    <div class="term-meaning">6×6=36 갈애가 생성되는 경전</div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <h3>지혜와 청정</h3>
+                
+                <div class="term-box">
+                    <div class="term-korean">삼청정</div>
+                    <div class="term-pali">Ti-visuddhi</div>
+                    <div class="term-meaning">계청정, 심청정, 견청정</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">바와나</div>
+                    <div class="term-pali">Bhāvanā</div>
+                    <div class="term-meaning">수행, 계발. 마음을 계발하는 것</div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <div class="quote-box">
+                    "에히 빠시고 (Ehi passiko)<br>
+                    와서 보라, 직접 알 수 있습니다"<br>
+                    - 부처님의 가르침
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <h3>4단계 성인</h3>
+                
+                <div class="term-box">
+                    <div class="term-korean">수다원</div>
+                    <div class="term-pali">Sotāpanna</div>
+                    <div class="term-meaning">예류과. 깨달음의 흐름에 든 자</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">사다함</div>
+                    <div class="term-pali">Sakadāgāmī</div>
+                    <div class="term-meaning">일래과. 한 번 더 돌아올 자</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">아나함</div>
+                    <div class="term-pali">Anāgāmī</div>
+                    <div class="term-meaning">불환과. 다시 돌아오지 않는 자</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">아라한</div>
+                    <div class="term-pali">Arahant</div>
+                    <div class="term-meaning">응공. 완전한 깨달음을 성취한 자</div>
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <div class="quote-box">
+                    "지혜계발 심리변화 되면서 좋게 변화되면서<br>
+                    인간으로서 성장되고 있어요"<br>
+                    - 수행의 결과
+                </div>
+                
+                <div class="section-divider"></div>
+                
+                <h3>수행 조건</h3>
+                
+                <div class="term-box">
+                    <div class="term-korean">깔라 삼빠띠</div>
+                    <div class="term-pali">Kāla-sampatti</div>
+                    <div class="term-meaning">시대의 완전함. 좋은 시대에 태어남</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">우빠띠 삼빠띠</div>
+                    <div class="term-pali">Upādhi-sampatti</div>
+                    <div class="term-meaning">조건의 완전함. 감각기관이 온전함</div>
+                </div>
+                
+                <div class="term-box">
+                    <div class="term-korean">빠요가 삼빠띠</div>
+                    <div class="term-pali">Payoga-sampatti</div>
+                    <div class="term-meaning">노력의 완전함. 지혜와 사띠로 수행할 능력</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; text-align: center; color: #666; border-top: 2px solid #e0e6ed; padding-top: 30px;">
+            <p><strong>수행의 핵심:</strong> 매 순간 관찰 → 개념 초월 → 아상 소멸 → 지혜 계발 → 완전한 해탈</p>
+            <p><strong>최종 목표:</strong> 우주의 기적 8정도 수행하여 니바나 성취</p>
+        </div>
+    </div>
+</body>
+</html>
