@@ -1,1 +1,863 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>위빠사나 수행 교육용 플래시 학습도구</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .learning-container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .progress-text {
+            margin-top: 5px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+        
+        .slide-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .slide-content {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* 플래시카드 스타일 */
+        .flashcard {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .flashcard.flipped {
+            background: linear-gradient(135deg, #a8e6cf, #dcedc1);
+        }
+        
+        .card-front, .card-back {
+            transition: opacity 0.3s ease;
+        }
+        
+        .card-back {
+            display: none;
+        }
+        
+        .flashcard.flipped .card-front {
+            display: none;
+        }
+        
+        .flashcard.flipped .card-back {
+            display: block;
+        }
+        
+        .korean-term {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .pali-term {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .meaning {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        /* 단계별 학습 */
+        .step-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .step-item {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .step-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .step-number {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .step-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .step-description {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+        
+        /* 퀴즈 스타일 */
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .question {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .option {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .option:hover {
+            background: linear-gradient(135deg, #fdcb6e, #e17055);
+            transform: translateY(-2px);
+        }
+        
+        .option.correct {
+            background: linear-gradient(135deg, #a8e6cf, #7bed9f);
+            border: 2px solid #00b894;
+        }
+        
+        .option.wrong {
+            background: linear-gradient(135deg, #ff7675, #fd79a8);
+            border: 2px solid #e17055;
+        }
+        
+        /* 네비게이션 */
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* 섹션 메뉴 */
+        .section-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .section-card {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+        
+        .section-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        /* 특별 효과 */
+        .highlight-box {
+            background: linear-gradient(135deg, #ffd89b, #19547b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .meditation-guide {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .breathing-animation {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            margin: 20px auto;
+            animation: breathe 4s infinite;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .learning-container {
+                margin: 10px;
+            }
+            
+            .slide {
+                padding: 20px;
+            }
+            
+            .slide-title {
+                font-size: 1.8em;
+            }
+            
+            .step-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="learning-container">
+        <div class="header">
+            <h1>위빠사나 수행 학습도구</h1>
+            <div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 / 15</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- 슬라이드 1: 메인 메뉴 -->
+            <div class="slide active" id="slide-0">
+                <div class="slide-title">위빠사나 수행 완전 가이드</div>
+                <div class="slide-content">
+                    <div class="section-menu">
+                        <div class="section-card" onclick="goToSlide(1)">
+                            <div class="section-icon">🧘‍♂️</div>
+                            <div class="section-title">기초 개념</div>
+                        </div>
+                        <div class="section-card" onclick="goToSlide(5)">
+                            <div class="section-icon">👁️</div>
+                            <div class="section-title">육입-육경-육식</div>
+                        </div>
+                        <div class="section-card" onclick="goToSlide(8)">
+                            <div class="section-icon">🔗</div>
+                            <div class="section-title">12연기법</div>
+                        </div>
+                        <div class="section-card" onclick="goToSlide(11)">
+                            <div class="section-icon">💎</div>
+                            <div class="section-title">지혜계발</div>
+                        </div>
+                        <div class="section-card" onclick="goToSlide(13)">
+                            <div class="section-icon">🎯</div>
+                            <div class="section-title">실습 가이드</div>
+                        </div>
+                        <div class="section-card" onclick="goToSlide(14)">
+                            <div class="section-icon">🧠</div>
+                            <div class="section-title">학습 퀴즈</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 2: 생로사와 부처님 출현 -->
+            <div class="slide" id="slide-1">
+                <div class="slide-title">생로사와 부처님 출현</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">생로사 (生老死)</div>
+                            <div class="pali-term">Jāti-jarā-maraṇa</div>
+                            <p>카드를 클릭하여 의미를 확인하세요</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                태어남, 늙음, 죽음<br><br>
+                                "이 세상에 생로사가 벌어지지 않으면 부처님께서 출현하지 않으실 것이고, 
+                                담마 위니야라는 경율론도 세상에 밝혀지지 않을 것이다"<br><br>
+                                모든 중생이 겪는 근본적 고통이며, 이로부터 해탈시키기 위해 부처님이 출현하셨습니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 3: 담마 위니야 -->
+            <div class="slide" id="slide-2">
+                <div class="slide-title">부처님의 가르침</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">담마 위니야</div>
+                            <div class="pali-term">Dhamma-Vinaya</div>
+                            <p>카드를 클릭하여 의미를 확인하세요</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                부처님의 가르침과 계율<br><br>
+                                담마(Dhamma): 진리, 법<br>
+                                위니야(Vinaya): 계율, 규율<br><br>
+                                경율론 삼장으로 구성된 부처님의 완전한 가르침체계입니다.
+                                태양의 은혜와 같이 믿든 안 믿든 모든 중생이 그 은혜를 받고 있습니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 4: 수행 조건들 -->
+            <div class="slide" id="slide-3">
+                <div class="slide-title">수행을 위한 네 가지 조건</div>
+                <div class="slide-content">
+                    <div class="step-container">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-title">깔라 삼빠띠</div>
+                            <div class="step-description">좋은 시대<br>부처님 가르침이 전해지는 시대</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-title">수빠띠</div>
+                            <div class="step-description">인간으로 태어남<br>수행할 수 있는 귀중한 기회</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-title">우빠띠 삼빠띠</div>
+                            <div class="step-description">감각기관 완전<br>눈귀코혀몸마음 모든 기능 정상</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-title">빠요가 삼빠띠</div>
+                            <div class="step-description">지혜와 사띠로<br>매순간 놓침없이 수행할 능력</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 5: 사념처 수행 -->
+            <div class="slide" id="slide-4">
+                <div class="slide-title">사념처 수행</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">사념처</div>
+                            <div class="pali-term">Satipaṭṭhāna</div>
+                            <p>네 가지 마음챙김 - 클릭하여 자세히 보기</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                <strong>1. 신념처 (Kāyānupassanā)</strong> - 몸에 대한 마음챙김<br>
+                                <strong>2. 수념처 (Vedanānupassanā)</strong> - 느낌에 대한 마음챙김<br>
+                                <strong>3. 심념처 (Cittānupassanā)</strong> - 마음에 대한 마음챙김<br>
+                                <strong>4. 법념처 (Dhammānupassanā)</strong> - 법에 대한 마음챙김<br><br>
+                                특히 찌따 위빠사나(심념처)를 중심으로 수행합니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 6: 육입 -->
+            <div class="slide" id="slide-5">
+                <div class="slide-title">육입 - 여섯 감각기관</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">육입 (六入)</div>
+                            <div class="pali-term">Ṣaḍ-āyatana</div>
+                            <p>여섯 감각 문 - 클릭하여 자세히 보기</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                <strong>1. 안(眼)</strong> - 눈<br>
+                                <strong>2. 이(耳)</strong> - 귀<br>
+                                <strong>3. 비(鼻)</strong> - 코<br>
+                                <strong>4. 설(舌)</strong> - 혀<br>
+                                <strong>5. 신(身)</strong> - 몸<br>
+                                <strong>6. 의(意)</strong> - 마음<br><br>
+                                외부 대상을 받아들이는 여섯 가지 문
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 7: 육경 -->
+            <div class="slide" id="slide-6">
+                <div class="slide-title">육경 - 여섯 대상</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">육경 (六境)</div>
+                            <div class="pali-term">Ṣaḍ-viṣaya</div>
+                            <p>여섯 인식 대상 - 클릭하여 자세히 보기</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                <strong>1. 색(色)</strong> - 형상, 시각 대상<br>
+                                <strong>2. 성(聲)</strong> - 소리, 청각 대상<br>
+                                <strong>3. 향(香)</strong> - 냄새, 후각 대상<br>
+                                <strong>4. 미(味)</strong> - 맛, 미각 대상<br>
+                                <strong>5. 촉(觸)</strong> - 감촉, 촉각 대상<br>
+                                <strong>6. 법(法)</strong> - 법경, 의식 대상<br><br>
+                                감각기관이 접촉하는 외부 환경
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 8: 육식 -->
+            <div class="slide" id="slide-7">
+                <div class="slide-title">육식 - 여섯 의식</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">육식 (六識)</div>
+                            <div class="pali-term">Ṣaḍ-vijñāna</div>
+                            <p>여섯 가지 인식작용 - 클릭하여 자세히 보기</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                <strong>1. 안식</strong> - 보는 의식<br>
+                                <strong>2. 이식</strong> - 듣는 의식<br>
+                                <strong>3. 비식</strong> - 냄새 의식<br>
+                                <strong>4. 설식</strong> - 맛 의식<br>
+                                <strong>5. 신식</strong> - 감촉 의식<br>
+                                <strong>6. 의식</strong> - 생각 의식<br><br>
+                                6×6=36 차까수따: 36가지 갈애가 생성됨
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 9: 12연기 1부 -->
+            <div class="slide" id="slide-8">
+                <div class="slide-title">12연기법 - 전반부</div>
+                <div class="slide-content">
+                    <div class="step-container">
+                        <div class="step-item">
+                            <div class="step-title">무명 (無明)</div>
+                            <div class="step-description">Avidyā<br>무지, 근본 어둠</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">행 (行)</div>
+                            <div class="step-description">Saṃskāra<br>형성, 업 활동</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">식 (識)</div>
+                            <div class="step-description">Vijñāna<br>의식, 인식</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">명색 (名色)</div>
+                            <div class="step-description">Nāma-rūpa<br>정신과 물질</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">육입 (六入)</div>
+                            <div class="step-description">Ṣaḍ-āyatana<br>여섯 감각기관</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">촉 (觸)</div>
+                            <div class="step-description">Sparśa<br>접촉</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 10: 12연기 2부 -->
+            <div class="slide" id="slide-9">
+                <div class="slide-title">12연기법 - 후반부</div>
+                <div class="slide-content">
+                    <div class="step-container">
+                        <div class="step-item">
+                            <div class="step-title">수 (受)</div>
+                            <div class="step-description">Vedanā<br>느낌, 감수</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">애 (愛)</div>
+                            <div class="step-description">Tṛṣṇā<br>갈애, 갈망</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">취 (取)</div>
+                            <div class="step-description">Upādāna<br>집착, 취착</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">유 (有)</div>
+                            <div class="step-description">Bhava<br>존재, 생성</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">생 (生)</div>
+                            <div class="step-description">Jāti<br>태어남</div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-title">노사 (老死)</div>
+                            <div class="step-description">Jarā-maraṇa<br>늙음과 죽음</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 11: 갈애의 작용 -->
+            <div class="slide" id="slide-10">
+                <div class="slide-title">갈애의 3가지 반응</div>
+                <div class="slide-content">
+                    <div class="step-container">
+                        <div class="step-item" style="background: linear-gradient(135deg, #ff6b6b, #ee5a52);">
+                            <div class="step-title">좋은 느낌 → 탐심</div>
+                            <div class="step-description">욕심나게 되어 더 많이 갖고 싶어함<br>갑자기 죽으면 <strong>귀신</strong>으로 태어남</div>
+                        </div>
+                        <div class="step-item" style="background: linear-gradient(135deg, #fd79a8, #e84393);">
+                            <div class="step-title">나쁜 느낌 → 성냄</div>
+                            <div class="step-description">싫어하며 그 상황에서 벗어나고 싶어함<br>갑자기 죽으면 <strong>지옥</strong>에 태어남</div>
+                        </div>
+                        <div class="step-item" style="background: linear-gradient(135deg, #636e72, #2d3436);">
+                            <div class="step-title">덤덤한 느낌 → 어리석음</div>
+                            <div class="step-description">멍때리고 무명상태<br>갑자기 죽으면 <strong>축생</strong>으로 태어남</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 12: 나마루빠 분별지 -->
+            <div class="slide" id="slide-11">
+                <div class="slide-title">첫 번째 지혜: 나마루빠 분별지</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">나마루빠 빠리체다 냐나</div>
+                            <div class="pali-term">Nāma-rūpa-pariccheda-ñāṇa</div>
+                            <p>정신과 물질을 분별하는 지혜 - 클릭하여 자세히 보기</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                <strong>"물질은 물질이구나, 정신은 정신이구나"</strong><br><br>
+                                • 물질은 정신이 아니고, 정신은 물질이 아니다<br>
+                                • 기름과 물, 물과 불같이 완전히 섞이지 않음<br>
+                                • 정신: 인지기능 있음 (살아있는 사람)<br>
+                                • 물질: 인지기능 없음 (시체, 나무토막)<br><br>
+                                매 순간 관찰하여 직접 체험하는 지혜
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 13: 아상 소멸 -->
+            <div class="slide" id="slide-12">
+                <div class="slide-title">아상 소멸과 사견 제거</div>
+                <div class="slide-content">
+                    <div class="flashcard" onclick="flipCard(this)">
+                        <div class="card-front">
+                            <div class="korean-term">사까야 디띨</div>
+                            <div class="pali-term">Sakkāya-diṭṭhi</div>
+                            <p>유신견 - '나'라는 견해 - 클릭하여 자세히 보기</p>
+                        </div>
+                        <div class="card-back">
+                            <div class="meaning">
+                                <strong>아상이 깨지는 과정:</strong><br><br>
+                                • 걷는 '나', 숨쉬는 '나'가 실제로는 없음<br>
+                                • 오직 물질과 정신만 굴러가고 있음<br>
+                                • 자동차 비유: 부품들만 있을 뿐 '자동차'는 없음<br>
+                                • 아상·인상·중생상·수자상 모두 소멸<br><br>
+                                <strong>결과:</strong> 이기심 사라지고 이타심 증장
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 14: 실습 가이드 -->
+            <div class="slide" id="slide-13">
+                <div class="slide-title">구체적 수행법</div>
+                <div class="slide-content">
+                    <div class="meditation-guide">
+                        <h3>호흡 관찰 수행</h3>
+                        <div class="breathing-animation"></div>
+                        <p><strong>들숨:</strong> 풍대(물질) + 들이쉬려는 마음(정신)</p>
+                        <p><strong>날숨:</strong> 풍대(물질) + 내쉬려는 마음(정신)</p>
+                        <p>매 순간 이 두 가지를 분리해서 관찰</p>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <strong>관찰 빈도:</strong> 1초에 1번, 1시간에 3600번<br>
+                        <strong>목표:</strong> 물질과 정신이 완전히 별개임을 직접 체험
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 슬라이드 15: 퀴즈 -->
+            <div class="slide" id="slide-14">
+                <div class="slide-title">학습 확인 퀴즈</div>
+                <div class="slide-content">
+                    <div class="quiz-container">
+                        <div class="question" id="question">위빠사나의 첫 번째 지혜는 무엇입니까?</div>
+                        <div class="options">
+                            <button class="option" onclick="selectAnswer(this, false)">
+                                사념처 수행을 완전히 익히는 것
+                            </button>
+                            <button class="option" onclick="selectAnswer(this, true)">
+                                물질과 정신을 분별하여 아는 것
+                            </button>
+                            <button class="option" onclick="selectAnswer(this, false)">
+                                12연기법을 외우는 것
+                            </button>
+                            <button class="option" onclick="selectAnswer(this, false)">
+                                육입-육경-육식을 이해하는 것
+                            </button>
+                        </div>
+                        <div id="explanation" style="margin-top: 20px; display: none;">
+                            <div class="highlight-box">
+                                정답입니다! 나마루빠 빠리체다 냐나(정신과 물질을 분별하는 지혜)가 
+                                위빠사나의 첫 번째 지혜입니다.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="previousSlide()">이전</button>
+            <button class="nav-btn" onclick="goToSlide(0)">메뉴</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextSlide()">다음</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 15;
+        
+        function updateProgress() {
+            const progress = (currentSlide / (totalSlides - 1)) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentSlide} / ${totalSlides - 1}`;
+        }
+        
+        function goToSlide(slideNumber) {
+            // 현재 슬라이드 숨기기
+            document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+            document.getElementById(`slide-${currentSlide}`).classList.add('prev');
+            
+            // 새 슬라이드 보이기
+            setTimeout(() => {
+                document.getElementById(`slide-${currentSlide}`).classList.remove('prev');
+                currentSlide = slideNumber;
+                document.getElementById(`slide-${currentSlide}`).classList.add('active');
+                updateProgress();
+                updateNavigation();
+            }, 250);
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                goToSlide(currentSlide + 1);
+            }
+        }
+        
+        function previousSlide() {
+            if (currentSlide > 0) {
+                goToSlide(currentSlide - 1);
+            }
+        }
+        
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+        
+        function flipCard(card) {
+            card.classList.toggle('flipped');
+        }
+        
+        function selectAnswer(option, isCorrect) {
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.disabled = true;
+                if (opt === option) {
+                    if (isCorrect) {
+                        opt.classList.add('correct');
+                    } else {
+                        opt.classList.add('wrong');
+                    }
+                }
+            });
+            
+            document.getElementById('explanation').style.display = 'block';
+        }
+        
+        // 키보드 네비게이션
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+            if (e.key === 'Home') goToSlide(0);
+        });
+        
+        // 초기화
+        updateProgress();
+        updateNavigation();
+    </script>
+</body>
+</html>
