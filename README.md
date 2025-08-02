@@ -47,7 +47,7 @@
 ### 온라인 접속
 프로젝트가 GitHub Pages로 배포되어 있어 브라우저에서 바로 사용할 수 있습니다:
 
-🔗 **[위빠사나 학습 도구 바로가기](https://your-username.github.io/vipassana-learning-tools/)**
+🔗 **[위빠사나 학습 도구 바로가기](https://youncd.github.io/vipassana-learning-tools/)**
 
 ### 로컬 실행
 ```bash
@@ -158,7 +158,7 @@ git push origin feature/your-feature-name
 프로젝트에 대한 문의나 제안이 있으시면 언제든 연락해 주세요:
 
 - **GitHub Issues**: [이슈 등록하기](https://github.com/your-username/vipassana-learning-tools/issues)
-- **Email**: your-email@example.com
+- **Email**: youncd@naver.com
 
 ---
 
